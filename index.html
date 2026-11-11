@@ -1,17 +1,196 @@
+
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>My Pages site</title>
+    <title>Nazneen — Cloudflare Lab</title>
     <style>
-      body { font-family: system-ui, sans-serif; max-width: 40rem; margin: 4rem auto; padding: 0 1rem; }
-      code { background: #eee; padding: 0.1rem 0.3rem; border-radius: 3px; }
+      :root {
+        --bg: #0b1020;
+        --card: rgba(255, 255, 255, 0.06);
+        --chip: rgba(255, 255, 255, 0.05);
+        --line: rgba(255, 255, 255, 0.12);
+        --text: #eef2ff;
+        --muted: #9aa4c4;
+        --brand: #f6821f;
+        color-scheme: dark light;
+      }
+      @media (prefers-color-scheme: light) {
+        :root {
+          --bg: #f6f7fb;
+          --card: rgba(255, 255, 255, 0.72);
+          --chip: rgba(15, 23, 42, 0.04);
+          --line: rgba(15, 23, 42, 0.10);
+          --text: #0f172a;
+          --muted: #55617f;
+        }
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100svh;
+        display: grid;
+        place-items: center;
+        padding: 2rem 1.25rem;
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+        color: var(--text);
+        background: var(--bg);
+        overflow-x: hidden;
+      }
+      .blob {
+        position: fixed;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.5;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .blob.a {
+        width: 46vmax; height: 46vmax; top: -18vmax; left: -12vmax;
+        background: radial-gradient(circle at 30% 30%, #f6821f, transparent 70%);
+        animation: drift 18s ease-in-out infinite alternate;
+      }
+      .blob.b {
+        width: 40vmax; height: 40vmax; bottom: -16vmax; right: -10vmax;
+        background: radial-gradient(circle at 70% 70%, #6366f1, transparent 70%);
+        animation: drift 22s ease-in-out infinite alternate-reverse;
+      }
+      @keyframes drift {
+        from { transform: translate3d(0, 0, 0) scale(1); }
+        to   { transform: translate3d(4vmax, 3vmax, 0) scale(1.15); }
+      }
+      .card {
+        position: relative;
+        z-index: 1;
+        width: min(680px, 100%);
+        padding: clamp(1.75rem, 4vw, 3rem);
+        border-radius: 24px;
+        background: var(--card);
+        border: 1px solid var(--line);
+        backdrop-filter: blur(18px) saturate(140%);
+        -webkit-backdrop-filter: blur(18px) saturate(140%);
+        box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.55);
+      }
+      .eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        margin: 0 0 1.1rem;
+        font-size: 0.75rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .dot {
+        width: 0.5rem; height: 0.5rem;
+        border-radius: 50%;
+        background: #22c55e;
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0%   { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.55); }
+        70%  { box-shadow: 0 0 0 0.55rem rgba(34, 197, 94, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+      }
+      h1 {
+        margin: 0 0 1rem;
+        font-size: clamp(2rem, 6vw, 3.25rem);
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+      }
+      h1 span {
+        background: linear-gradient(100deg, #f6821f, #fbbf24 45%, #818cf8);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .lead {
+        margin: 0 0 1.75rem;
+        max-width: 46ch;
+        font-size: clamp(1rem, 2.2vw, 1.125rem);
+        line-height: 1.6;
+        color: var(--muted);
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        margin: 0 0 2rem;
+      }
+      .chip {
+        padding: 0.45rem 0.85rem;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: var(--chip);
+        font-size: 0.8125rem;
+        transition: transform 0.18s ease, border-color 0.18s ease;
+      }
+      .chip:hover {
+        transform: translateY(-2px);
+        border-color: var(--brand);
+      }
+      .meta {
+        display: grid;
+        gap: 0.55rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid var(--line);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.8125rem;
+        color: var(--muted);
+      }
+      .meta div {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+      .meta b {
+        font-weight: 600;
+        color: var(--text);
+        text-align: right;
+        overflow-wrap: anywhere;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .blob, .dot { animation: none; }
+      }
     </style>
   </head>
   <body>
-    <h1>Hello from Pages</h1>
-    <p>You are reading this at <code id="host"></code></p>
-    <script>document.getElementById("host").textContent = location.host;</script>
+    <div class="blob a"></div>
+    <div class="blob b"></div>
+
+    <main class="card">
+      <p class="eyebrow"><span class="dot"></span> Live on Cloudflare</p>
+      <h1>Hello from <span>Nazneen</span></h1>
+      <p class="lead">
+        Deployed from a git commit, built on push, served from Cloudflare's
+        network. No server to patch, no upload step — this file is all it takes.
+      </p>
+
+      <div class="chips">
+        <div class="chip">Pages</div>
+        <div class="chip">Workers</div>
+        <div class="chip">Workers Builds</div>
+        <div class="chip">Wrangler</div>
+      </div>
+
+      <div class="meta">
+        <div><span>host</span><b id="host">—</b></div>
+        <div><span>your time</span><b id="clock">—</b></div>
+        <div><span>served</span><b id="served">—</b></div>
+      </div>
+    </main>
+
+    <script>
+      const now = new Date();
+      document.getElementById("host").textContent = location.host;
+      document.getElementById("served").textContent = now.toISOString().slice(0, 10);
+      const tick = () => {
+        document.getElementById("clock").textContent =
+          new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+      };
+      tick();
+      setInterval(tick, 1000);
+    </script>
   </body>
 </html>
